@@ -1,0 +1,2 @@
+%HOST%,"Hostname of target machine","WEB-INF/classes/app.properties"
+%DB_USER%,"Database username","WEB-INF/classes/db.properties"

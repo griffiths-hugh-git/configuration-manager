@@ -1,0 +1,3 @@
+%HOST%,"Hostname of target machine","app.properties"
+%DB_USER%,"Database username","db.properties"
+%DB_PASSWORD%,"Database password","db.properties"
