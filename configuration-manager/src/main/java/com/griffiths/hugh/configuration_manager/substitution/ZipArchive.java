@@ -12,11 +12,29 @@ import java.util.zip.ZipFile;
 
 import org.apache.commons.io.IOUtils;
 
+/**
+ * Wrapper for a zip archive, providing more limited access to its contents.
+ * 
+ * @author hugh
+ */
+/**
+ * @author hugh
+ *
+ */
+/**
+ * @author hugh
+ *
+ */
 public class ZipArchive implements AutoCloseable{
 	private final File archiveFile; 
 	private final ZipFile zipFile;
 	private final Set<String> names;
 	
+	/**
+	 * @param archiveFile Source file.
+	 * @throws IOException File cannot be read.
+	 * @throws ZipException File is not a valid zip.
+	 */
 	public ZipArchive(File archiveFile) throws ZipException, IOException {
 		this.archiveFile=archiveFile;
 		zipFile = new ZipFile(archiveFile);
@@ -34,32 +52,52 @@ public class ZipArchive implements AutoCloseable{
 		return archiveFile;
 	}
 
-	public Set<String> getNamesIndex(){
+	/**
+	 * Returns a collection of all the paths within the archive.
+	 * 
+	 * @return
+	 */
+	public Set<String> getPathsIndex(){
 		return names;
 	}
 	
+	/**
+	 * Check whether the archive contains a particular file.
+	 * 
+	 * @param path
+	 * @return
+	 */
 	public boolean containsFile(String path){
 		return (null!=zipFile.getEntry(path));
 	}
 	
+	/**
+	 * Get an InputStream of the binary contents of a file within the archive.
+	 * 
+	 * @param path
+	 * @return
+	 * @throws IOException
+	 */
 	public InputStream getFileContents(String path) throws IOException{
 		ZipEntry entry = zipFile.getEntry(path);
 		InputStream is = zipFile.getInputStream(entry);
 		return is;
 	}
 	
+	/**
+	 * Gets the contents of a file within the archive rendered as a string.
+	 * 
+	 * @param path
+	 * @return
+	 * @throws IOException
+	 */
 	public String getFileContentsAsString(String path) throws IOException{
 		return IOUtils.toString(getFileContents(path));
 	}
 	
-	public static void main(String[] args) throws IOException{
-		File jar = new File("src/test/resources/configuration-test.jar");
-		ZipArchive archive = new ZipArchive(jar);
-
-		System.out.println(archive.getFileContents("db.properties"));
-		archive.close();
-	}
-
+	/* (non-Javadoc)
+	 * @see java.lang.AutoCloseable#close()
+	 */
 	public void close() throws IOException {
 		zipFile.close();
 	}

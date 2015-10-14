@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.griffiths.hugh.configuration_manager.data.Configuration;
 import com.griffiths.hugh.configuration_manager.data.ConfigurationMetadata;
-import com.griffiths.hugh.configuration_manager.data.Environment;
+import com.griffiths.hugh.configuration_manager.data.EnvironmentConfiguration;
 import com.griffiths.hugh.configuration_manager.exception.EnvironmentConfigurationException;
 import com.griffiths.hugh.configuration_manager.exception.MetadataConfigurationException;
 import com.griffiths.hugh.configuration_manager.reader.EnvironmentReader;
@@ -22,7 +22,7 @@ public class ConfigurationTest {
 		ConfigurationMetadata metadata = buildMetadata("src/test/resources/config_metadata.csv");
 		Configuration cfg = new Configuration(metadata);
 
-		Environment env = buildEnvironment();
+		EnvironmentConfiguration env = buildEnvironment();
 		cfg.addEnvironment(env);
 
 		assertEquals(true, cfg.validate());
@@ -33,7 +33,7 @@ public class ConfigurationTest {
 		ConfigurationMetadata metadata = buildMetadata("src/test/resources/config_metadata_extra_value.csv");
 		Configuration cfg = new Configuration(metadata);
 
-		Environment env = buildEnvironment();
+		EnvironmentConfiguration env = buildEnvironment();
 		cfg.addEnvironment(env);
 
 		assertEquals(false, cfg.validate());
@@ -44,15 +44,15 @@ public class ConfigurationTest {
 		ConfigurationMetadata metadata = buildMetadata("src/test/resources/config_metadata_missing_value.csv");
 		Configuration cfg = new Configuration(metadata);
 
-		Environment env = buildEnvironment();
+		EnvironmentConfiguration env = buildEnvironment();
 		cfg.addEnvironment(env);
 
 		assertEquals(false, cfg.validate());
 	}
 	
-	private Environment buildEnvironment() throws IOException, EnvironmentConfigurationException {
+	private EnvironmentConfiguration buildEnvironment() throws IOException, EnvironmentConfigurationException {
 		File dev = new File("src/test/resources/dev.properties");
-		Environment env = new EnvironmentReader().readEnvironmentProperties(dev);
+		EnvironmentConfiguration env = new EnvironmentReader().readEnvironmentProperties(dev);
 		return env;
 	}
 

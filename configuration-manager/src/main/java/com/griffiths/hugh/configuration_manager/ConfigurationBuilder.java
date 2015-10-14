@@ -5,33 +5,65 @@ import java.io.IOException;
 
 import com.griffiths.hugh.configuration_manager.data.Configuration;
 import com.griffiths.hugh.configuration_manager.data.ConfigurationMetadata;
-import com.griffiths.hugh.configuration_manager.data.Environment;
+import com.griffiths.hugh.configuration_manager.data.EnvironmentConfiguration;
 import com.griffiths.hugh.configuration_manager.exception.EnvironmentConfigurationException;
 import com.griffiths.hugh.configuration_manager.exception.InvalidConfigurationException;
 import com.griffiths.hugh.configuration_manager.exception.MetadataConfigurationException;
 import com.griffiths.hugh.configuration_manager.reader.EnvironmentReader;
 import com.griffiths.hugh.configuration_manager.reader.MetadataReader;
 
+/**
+ * Class to load and parse the configuration files.
+ * 
+ * Expects one CSV file containing property definitions, and 0 or more
+ * environment files, which describe values of those variables in a particular
+ * environment.
+ * 
+ * @author hugh
+ *
+ */
 public class ConfigurationBuilder {
-	public Configuration buildConfiguration(String metadataFile, String... environmentFiles) throws IOException, EnvironmentConfigurationException, MetadataConfigurationException, InvalidConfigurationException{
+	/**
+	 * @param metadataFile
+	 *            Location of the metadata (CSV) file.
+	 * @param environmentFiles
+	 *            List of environment file locations. Each should be the
+	 *            location of an environment properties file.
+	 * @return
+	 * @throws IOException
+	 *             One of the files cannot be read.
+	 * @throws MetadataConfigurationException
+	 *             The metadata file is malformed.
+	 * @throws EnvironmentConfigurationException
+	 *             One of the environment files is malformed.
+	 * @throws InvalidConfigurationException
+	 *             One of more of the environment files does not define all of
+	 *             the variables, or defines a variable not present in the
+	 *             metadata file.
+	 */
+	public Configuration buildConfiguration(String metadataFile, String... environmentFiles) throws IOException,
+			EnvironmentConfigurationException, MetadataConfigurationException, InvalidConfigurationException {
+		// Load metadata file
 		ConfigurationMetadata metadata = buildMetadata(metadataFile);
 		Configuration cfg = new Configuration(metadata);
-		
-		for (String environment : environmentFiles){
-			Environment env = buildEnvironment(environment);
+
+		// Configure environment files
+		for (String environment : environmentFiles) {
+			EnvironmentConfiguration env = buildEnvironment(environment);
 			cfg.addEnvironment(env);
 		}
-		
-		if (!cfg.validate()){
+
+		// Validate the environment files against the metadata file
+		if (!cfg.validate()) {
 			throw new InvalidConfigurationException();
 		}
-		
+
 		return cfg;
 	}
-	
-	private Environment buildEnvironment(String environment) throws IOException, EnvironmentConfigurationException {
+
+	private EnvironmentConfiguration buildEnvironment(String environment) throws IOException, EnvironmentConfigurationException {
 		File dev = new File(environment);
-		Environment env = new EnvironmentReader().readEnvironmentProperties(dev);
+		EnvironmentConfiguration env = new EnvironmentReader().readEnvironmentProperties(dev);
 		return env;
 	}
 

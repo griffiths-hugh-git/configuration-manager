@@ -5,6 +5,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Represents the full set of properties defined in the metadata file.
+ * Properties are broken down by file to allow efficient substitution.
+ * 
+ * @author hugh
+ *
+ */
 public class ConfigurationMetadata implements Iterable<ConfigurationFile> {
 	private final Map<String, ConfigurationFile> files = new HashMap<String, ConfigurationFile>();
 

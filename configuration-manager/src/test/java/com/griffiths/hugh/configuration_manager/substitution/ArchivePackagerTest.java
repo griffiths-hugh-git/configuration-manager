@@ -27,11 +27,11 @@ public class ArchivePackagerTest {
 				,"target/test-classes/live.properties");
 		
 		// Package
-		(new ArchivePackager()).packageArchive(original, cfg);
+		(new ArchivePropertySubstituter()).packageArchive(original, cfg);
 		original.close();
 		
 		// Test dev archive results
-		File devJar=new File("target/test-classes/configuration-test.jar_dev");
+		File devJar=new File("target/test-classes/dev_configuration-test.jar");
 		assertTrue(devJar.exists());
 		ZipArchive devArchive = new ZipArchive(devJar);
 		assertTrue(devArchive.containsFile("db.properties"));
