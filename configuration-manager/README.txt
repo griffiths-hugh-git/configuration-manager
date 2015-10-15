@@ -6,6 +6,7 @@ This project aims to provide a systematic, repeatable, documented method to appl
 Use cases:
 -Take a Java archive (JAR, WAR, etc.), apply environment-specific values to configuration properties and produce a copy of the archive ready for deployment in each environment.
 -Configure values in files of any configuration file format (i.e. properties files, XML, etc.) - any format stored in plain text inside the archive.
+-Provides traceability back to the original archive by including its hash in all filenames.
 -Produce a standard format for documenting parameters which must be configured for each environment.  This information can then be included in system documentation.
 -Runs standalone, with minimal dependencies, to allow it to be run on controlled environments, to allow configuration properties (e.g. database passwords) to be applied only on locked-down systems.  
 
@@ -20,7 +21,7 @@ Usage:
 -Run the JAR with dependencies:
 	java -jar configuration-manager-jar-with-dependencies.jar <archive file> <metadata file> <environment1> <environment2> ...
  A new archive is generated for each environment, in the same location as the original archive, with name prefixed with the environment ID:
- 	<archive path>/<environment ID>_<archive name>
+ 	<archive path>/<environment ID>_<original_archive_hash>_<archive name>
  	
 Metadata file:
 -The metadata file is a CSV.  Each row must consist of exactly three entries:

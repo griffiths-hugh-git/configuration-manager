@@ -31,7 +31,7 @@ public class ArchivePackagerTest {
 		original.close();
 		
 		// Test dev archive results
-		File devJar=new File("target/test-classes/dev_configuration-test.jar");
+		File devJar=new File("target/test-classes/dev_0af479b8d4efa18c303d5a6087803ea2_configuration-test.jar");
 		assertTrue(devJar.exists());
 		ZipArchive devArchive = new ZipArchive(devJar);
 		assertTrue(devArchive.containsFile("db.properties"));

@@ -40,7 +40,8 @@ public class ArchivePropertySubstituter {
 			ZipOutputStream zos = new ZipOutputStream(fos);
 
 			// Transform and transcribe
-			LOG.info(String.format("Configuring environment '%s', archive will be written to '%s'.", env.getId(), newPath.getAbsolutePath()));
+			LOG.info(String.format("Configuring environment '%s', archive will be written to '%s'.", env.getId(),
+					newPath.getAbsolutePath()));
 			transformArchive(original, zos, config.getMetadata(), env);
 
 			// Close resources
@@ -50,8 +51,9 @@ public class ArchivePropertySubstituter {
 	}
 
 	/**
-	 * Constructs the new filename. The pattern is "<environmentID>_oldFilename"
-	 * , in the same folder as the original.
+	 * Constructs the new filename. The pattern is
+	 * "<environmentID>_<original hash>_<old filename>", in the same folder as
+	 * the original.
 	 * 
 	 * @param original
 	 * @param environmentId
@@ -60,7 +62,7 @@ public class ArchivePropertySubstituter {
 	private File constructNewFilename(ZipArchive original, String environmentId) {
 		File originalPath = original.getArchiveFile().getParentFile();
 		String originalName = original.getArchiveFile().getName();
-		String newName = environmentId + "_" + originalName;
+		String newName = environmentId + "_" + original.getMd5Hash() + "_" + originalName;
 		File newPath = new File(originalPath, newName);
 		return newPath;
 	}
@@ -94,11 +96,12 @@ public class ArchivePropertySubstituter {
 		for (ConfigurationProperty property : config.getProperties()) {
 			int occurences = StringUtils.countMatches(inProgress, property.getKey());
 			if (occurences == 0) {
-				LOG.warn(String.format("No occurences of propery '%s' found in path '%s'.  This may indicate the path has been configured incorrectly.", property.getKey(),
-						config.getPath()));
-			}
-			else {
-				LOG.debug(String.format("Replaced %d occurences of key '%s' in path '%s'", occurences, property.getKey(), config.getPath()));
+				LOG.warn(String.format(
+						"No occurences of propery '%s' found in path '%s'.  This may indicate the path has been configured incorrectly.",
+						property.getKey(), config.getPath()));
+			} else {
+				LOG.debug(String.format("Replaced %d occurences of key '%s' in path '%s'", occurences,
+						property.getKey(), config.getPath()));
 			}
 
 			// Replace all occurences of that property
